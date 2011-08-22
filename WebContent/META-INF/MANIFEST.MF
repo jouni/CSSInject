@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Implementation-Title: CSSInject
+Implementation-Version: 0.12
+Vaadin-Package-Version: 1
+Class-Path: 
+Vaadin-Widgetsets: org.vaadin.cssinject.Cssinject_addonWidgetset
+
