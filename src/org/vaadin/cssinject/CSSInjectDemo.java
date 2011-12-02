@@ -3,9 +3,12 @@ package org.vaadin.cssinject;
 import java.awt.Color;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ClassResource;
+import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ProgressIndicator;
 import com.vaadin.ui.VerticalLayout;
@@ -79,6 +82,9 @@ public class CSSInjectDemo extends Application {
             }
         };
         t.start();
+        
+        HorizontalLayout buttons = new HorizontalLayout();
+        buttons.setSpacing(true);
 
         Button toggle = new Button("Remove CSSInject",
                 new Button.ClickListener() {
@@ -94,8 +100,26 @@ public class CSSInjectDemo extends Application {
                         }
                     }
                 });
-        layout.addComponent(toggle);
-        layout.setComponentAlignment(toggle, Alignment.TOP_CENTER);
+        toggle.setWidth("200px");
+        buttons.addComponent(toggle);
+        layout.addComponent(buttons);
+        layout.setComponentAlignment(buttons, Alignment.TOP_CENTER);
+        
+        final ThemeResource themeStyles = new ThemeResource("../demo/extra.css");
+        Button toggleThemeStyleSheet = new Button("Add themes/demo/extra.css", new Button.ClickListener() {
+			public void buttonClick(ClickEvent event) {
+				if (css.hasStyleSheet(themeStyles)) {
+                    css.removeStyleSheet(themeStyles);
+                    event.getButton().setCaption("Add themes/demo/extra.css");
+                } else {
+                	css.addStyleSheet(themeStyles);
+                    event.getButton().setCaption("Remove themes/demo/extra.css");
+                }
+			}
+		});
+        toggleThemeStyleSheet.setWidth("200px");
+        buttons.addComponent(toggleThemeStyleSheet);
+        
 
     }
 
