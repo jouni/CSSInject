@@ -46,6 +46,7 @@ public class VCSSInject extends Widget implements Paintable {
 									.createLinkElement();
 							link.setHref(url);
 							link.setRel("stylesheet");
+							link.setType("text/css");
 							Document.get().getElementsByTagName("head")
 									.getItem(0).appendChild(link);
 							if (styleSheets == null) {
