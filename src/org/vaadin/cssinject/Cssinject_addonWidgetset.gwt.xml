@@ -4,7 +4,7 @@
 	<inherits name="com.vaadin.DefaultWidgetSet" />
 	
 	<source path="client"></source>
-	<source path="shared"></source>
+<!-- 	<source path="shared"></source> -->
 	
     <!--
      Uncomment the following to compile the widgetset for one browser only.

@@ -1,8 +1,8 @@
-package org.vaadin.cssinject.server;
+package org.vaadin.cssinject;
 
 import java.util.ArrayList;
 
-import org.vaadin.cssinject.shared.CSSInjectState;
+import org.vaadin.cssinject.client.CSSInjectState;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;

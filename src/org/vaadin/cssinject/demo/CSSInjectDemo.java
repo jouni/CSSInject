@@ -1,6 +1,6 @@
 package org.vaadin.cssinject.demo;
 
-import org.vaadin.cssinject.server.CSSInject;
+import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.server.ThemeResource;

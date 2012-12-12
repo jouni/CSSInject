@@ -1,4 +1,4 @@
-package org.vaadin.cssinject.shared;
+package org.vaadin.cssinject.client;
 
 import com.vaadin.shared.communication.SharedState;
 

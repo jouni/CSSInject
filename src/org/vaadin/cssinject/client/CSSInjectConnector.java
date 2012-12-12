@@ -1,7 +1,6 @@
 package org.vaadin.cssinject.client;
 
-import org.vaadin.cssinject.server.CSSInject;
-import org.vaadin.cssinject.shared.CSSInjectState;
+import org.vaadin.cssinject.CSSInject;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
