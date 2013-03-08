@@ -2,7 +2,7 @@ package org.vaadin.cssinject;
 
 import java.util.ArrayList;
 
-import org.vaadin.cssinject.client.CSSInjectState;
+import org.vaadin.cssinject.shared.CSSInjectState;
 
 import com.vaadin.server.AbstractExtension;
 import com.vaadin.server.Resource;
@@ -48,8 +48,8 @@ public class CSSInject extends AbstractExtension {
     }
 
     /**
-     * Attach a separate CSS stylesheet to the Window where this CSSInject
-     * instance is attached to. The stylesheet will be added to the document's
+     * Attach a separate CSS style sheet to the Window where this CSSInject
+     * instance is attached to. The style sheet will be added to the document's
      * HEAD element as a LINK element with the given resource as the href.
      * 
      * @param stylesheet
@@ -66,7 +66,11 @@ public class CSSInject extends AbstractExtension {
     }
 
     /**
-     * Remove the given stylesheet resource. TODO doesn't work currently
+     * Remove the given style sheet resource.
+     * 
+     * TODO Doesn't work currently. Workaround is to remove the extension
+     * completely, which will remove all of the stylesheets added through the
+     * extension.
      * 
      * @param styleSheet
      */
@@ -79,10 +83,10 @@ public class CSSInject extends AbstractExtension {
     }
 
     /**
-     * Add a stylesheet with the given url as a ThemeResource. The url should be
+     * Add a style sheet with the given url as a ThemeResource. The url should be
      * relative to the theme you use, e.g. if your theme folder is in
-     * <code>VAADIN/themes/mytheme</code>, then the stylesheet url will be
-     * <code>VAADIN/themes/mytheme/stylesheetUrl</code>.
+     * <code>VAADIN/themes/mytheme</code>, then the style sheet url will be
+     * <code>VAADIN/themes/mytheme/styleSheetUrl</code>.
      * 
      * @param styleSheetUrl
      */
@@ -91,7 +95,9 @@ public class CSSInject extends AbstractExtension {
     }
 
     /**
-     * TODO doesn't work currently
+     * TODO Doesn't work currently. Workaround is to remove the extension
+     * completely, which will remove all of the style sheets added through the
+     * extension.
      */
     public void removeThemeStyleSheet(String styleSheetUrl) {
         if (styleSheets != null) {
@@ -107,6 +113,13 @@ public class CSSInject extends AbstractExtension {
         }
     }
 
+    /**
+     * Check if this CSSInject has added the given style sheet in to the target
+     * UI.
+     * 
+     * @param stylesheet
+     * @return true if the given style sheet has been added to the UI by this CSSInject instance.
+     */
     public boolean hasStyleSheet(Resource stylesheet) {
         if (styleSheets == null)
             return false;

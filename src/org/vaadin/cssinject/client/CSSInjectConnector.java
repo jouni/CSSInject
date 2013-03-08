@@ -1,17 +1,26 @@
 package org.vaadin.cssinject.client;
 
 import org.vaadin.cssinject.CSSInject;
+import org.vaadin.cssinject.shared.CSSInjectState;
 
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NodeList;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(CSSInject.class)
 public class CSSInjectConnector extends AbstractExtensionConnector {
+
+    private static final long serialVersionUID = 9105506300908878649L;
+
+    @Override
+    protected void extend(ServerConnector target) {
+        // NOP
+    }
 
     @Override
     public void onStateChanged(StateChangeEvent event) {
@@ -101,9 +110,9 @@ public class CSSInjectConnector extends AbstractExtensionConnector {
             $doc.getElementsByTagName("head")[0].appendChild(el);
         }
         
-        if(el.styleSheet)
+        if(el.styleSheet) {
             el.styleSheet.cssText = value;
-        else {
+        } else {
             if(el.firstChild)
                 el.removeChild(el.firstChild);
             var rules = $doc.createTextNode(value);

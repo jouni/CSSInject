@@ -92,7 +92,7 @@ public class CSSInjectDemo extends UI {
                     public void buttonClick(ClickEvent event) {
                         if (poller.isVisible()) {
                             poller.setVisible(false);
-                            css.removeFromTarget();
+                            css.remove();
                             event.getButton().setCaption("Add CSSInject");
                         } else {
                             poller.setVisible(true);
