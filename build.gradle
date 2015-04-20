@@ -88,6 +88,38 @@ project(':addon') {
  * Demo application for demonstrating the addon
  */
 project(':demo') {
+    afterEvaluate { project ->
+        if(project.name != ':demo')
+            return
+        def demoUiFolder = "src/main/java/${project.group}/${addonName.toLowerCase()}/demo".replaceAll("\\.", "/")
+        demoUiFolder = new File(demoUiFolder)
+        demoUiFolder.mkdirs()
+        def demoUi = new File(demoUiFolder, "${addonName}Demo.java")
+        if(!demoUi.exists()) {
+            demoUi.withWriter {
+                it << "package ${project.group}.${addonName.toLowerCase()}.demo;\n\n\n\n"
+                it << "public class ${addonName}Demo extends com.vaadin.ui.UI {\n\n"
+                it << "   @Override\n"
+                it << "   protected void init(com.vaadin.server.VaadinRequest request) {\n"
+                it << "      \n"
+                it << "   }\n"
+                it << "\n}"
+            }
+        }
+
+        def webXml = new File("src/main/webapp/WEB-INF/web.xml")
+        def xml = new XmlParser().parse(webXml)
+        xml.'display-name'[0].replaceNode {
+            'display-name'(addonName)
+        }
+        xml.servlet[0].with {
+            if(demoUi.exists())
+                it.'init-param'[0].'param-value'[0].replaceNode{ 'param-value' "${project.group}.${addonName.toLowerCase()}.demo.${addonName}Demo" }
+            it.'init-param'[1].'param-value'[0].replaceNode{ 'param-value' "${project.group}.${addonName.toLowerCase()}.demo.DemoWidgetSet" }
+        }
+        groovy.xml.XmlUtil.serialize(xml, new PrintWriter(new FileWriter(webXml)))
+
+    }
     dependencies {
         compile project(':addon')
 

@@ -1,6 +1,6 @@
 package org.vaadin.addons.cssinject.demo;
 
-import org.vaadin.cssinject.CSSInject;
+import org.vaadin.addons.cssinject.CSSInject;
 
 import com.vaadin.annotations.Title;
 import com.vaadin.server.ThemeResource;
@@ -17,7 +17,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 @SuppressWarnings("serial")
 @Title("CSSInject Add-on")
-public class CSSInjectDemo extends UI {
+public class CssInjectDemo extends UI {
 
     private Thread t;
     private float sequence = 0;
