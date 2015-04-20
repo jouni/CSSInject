@@ -89,7 +89,7 @@ project(':addon') {
  */
 project(':demo') {
     afterEvaluate { project ->
-        if(project.toString().equals(':demo') && new File(".").absolutePath.endsWith("demo"))
+        if(!project.path.equals(':demo') || !new File(".").absolutePath.endsWith("demo\\."))
             return
         def demoUiFolder = "src/main/java/${project.group}/${addonName.toLowerCase()}/demo".replaceAll("\\.", "/")
         demoUiFolder = new File(demoUiFolder)
@@ -123,7 +123,6 @@ project(':demo') {
         demoUiFolder = new File(demoWidgetSetFolder)
         demoUiFolder.mkdirs()
         def demoWidgetSet = new File(demoWidgetSetFolder, "DemoWidgetSet.gwt.xml")
-        println demoWidgetSet.absolutePath
         if(!demoWidgetSet.exists()) {
             demoWidgetSet.createNewFile()
             demoWidgetSet.withWriter {
