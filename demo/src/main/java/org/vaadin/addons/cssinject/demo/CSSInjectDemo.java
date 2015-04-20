@@ -1,4 +1,4 @@
-package org.vaadin.cssinject.addons.demo;
+package org.vaadin.addons.cssinject.demo;
 
 import org.vaadin.cssinject.CSSInject;
 

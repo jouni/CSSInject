@@ -3,7 +3,7 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="stepper" version="2.5">
-	<display-name>Stepper</display-name>
+	<display-name>Demo</display-name>
 	<context-param>
 		<description>
   	Vaadin production mode</description>
@@ -17,13 +17,13 @@
 			<description>
 			Vaadin UI class to start</description>
 			<param-name>UI</param-name>
-			<param-value>org.vaadin.cssinject.demo.CSSInjectDemo</param-value>
+			<param-value>org.vaadin.addons.cssinject.demo.CSSInjectDemo</param-value>
 		</init-param>
 		<init-param>
 			<description>
 			Application widgetset</description>
 			<param-name>widgetset</param-name>
-			<param-value>org.vaadin.cssinject.demo.DemoWidgetSet</param-value>
+			<param-value>org.vaadin.addons.cssinject.demo.DemoWidgetSet</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>
