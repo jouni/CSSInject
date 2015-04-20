@@ -1,4 +1,4 @@
-package org.vaadin.cssinject;
+package org.vaadin.addons.cssinject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.server.*;
-import org.vaadin.cssinject.shared.CSSInjectState;
+import org.vaadin.addons.cssinject.shared.CSSInjectState;
 
 import com.vaadin.ui.UI;
 
