@@ -1,0 +1,129 @@
+def addonVersion = '2.0.4'
+def vaadinVersion = '7.4.3'
+def addonName = 'CssInject'
+def authorNames = 'Jouni Koivuviita'
+
+allprojects {
+    group = 'org.vaadin'
+    version = addonVersion
+    apply plugin: 'eclipse-wtp'
+    apply plugin: 'idea'
+}
+
+subprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    apply plugin: 'java'
+    apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+    //workaround for vaadin 7.4 and jetty 8
+    configurations.each { conf ->
+        conf.exclude module: 'asm-all'
+    }
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    vaadin {
+        version vaadinVersion
+    }
+}
+
+/**
+ * Vaadin addon project
+ */
+project(':addon') {
+    apply plugin: "maven-publish"
+    war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.8.+'
+    }
+
+    vaadin {
+        widgetset = "${project.group}.${addonName.toLowerCase()}.${addonName}WidgetSet"
+        addon {
+            author authorNames
+            license 'Apache 2.0'
+            title addonName
+        }
+    }
+
+    jar {
+        dependsOn test
+        from sourceSets.main.allJava
+    }
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+    publishing {
+        repositories {
+            maven {
+                /**
+                 * Configure your repository into ~/.gradle/gradle.properties, for example:
+                 * publishUrl=http://172.21.0.127:8081/nexus/content/repositories/vaadin-addons
+                 * publishUsername=deployment
+                 * publishPassword=deployment
+                 */
+                url publishUrl
+                credentials {
+                    username publishUsername
+                    password publishPassword
+                }
+            }
+        }
+        publications {
+            addon(MavenPublication) {
+                artifactId addonName.toLowerCase()
+                from components.java
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
+}
+
+/*
+ * Demo application for demonstrating the addon
+ */
+project(':demo') {
+    dependencies {
+        compile project(':addon')
+
+    }
+    apply plugin: "war"
+    vaadin {
+        widgetset = "${project.group}.${addonName.toLowerCase()}.demo.DemoWidgetSet"
+        serverPort 7676
+        debug true
+        devmode {
+            noserver true
+            superDevMode true
+            bindAddress '0.0.0.0'
+            codeServerPort 9997
+        }
+        testbench {
+            enabled true
+        }
+        plugin {
+            logToConsole true
+        }
+    }
+
+    war {
+        archiveName = "${addonName}.war"
+        // Include widgetset
+        dependsOn test, vaadinCompileWidgetset
+        // Add sources
+        webInf {
+            into('classes') {
+                from sourceSets.main.allJava
+            }
+        }
+    }
+    test {
+        dependsOn vaadinCompileWidgetset
+        systemProperties = System.properties
+    }
+}
