@@ -4,7 +4,7 @@ def addonName = 'CssInject'
 def authorNames = 'Jouni Koivuviita'
 
 allprojects {
-    group = 'org.vaadin'
+    group = 'org.vaadin.addons'
     version = addonVersion
     apply plugin: 'eclipse-wtp'
     apply plugin: 'idea'
