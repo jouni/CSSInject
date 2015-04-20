@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ArtifactManager">
-    <artifact type="war" name="Gradle : org.vaadin:addon : addon-2.0.4.war">
+    <artifact type="war" name="Gradle : org.vaadin.addons:addon : addon-2.0.4.war">
       <output-path>$PROJECT_DIR$/build/classes/artifacts/addon</output-path>
       <properties id="gradle-properties">
         <options external-project-path="$PROJECT_DIR$/addon" />
@@ -19,7 +19,7 @@
         </element>
       </root>
     </artifact>
-    <artifact type="exploded-war" name="Gradle : org.vaadin:addon : addon-2.0.4.war (exploded)">
+    <artifact type="exploded-war" name="Gradle : org.vaadin.addons:addon : addon-2.0.4.war (exploded)">
       <output-path>$PROJECT_DIR$/build/classes/artifacts/addon/exploded/addon-2.0.4.war</output-path>
       <properties id="gradle-properties">
         <options external-project-path="$PROJECT_DIR$/addon" />
@@ -37,7 +37,7 @@
         </element>
       </root>
     </artifact>
-    <artifact type="war" name="Gradle : org.vaadin:demo : CssInject.war">
+    <artifact type="war" name="Gradle : org.vaadin.addons:demo : CssInject.war">
       <output-path>$PROJECT_DIR$/build/classes/artifacts/demo</output-path>
       <properties id="gradle-properties">
         <options external-project-path="$PROJECT_DIR$/demo" />
@@ -50,7 +50,7 @@
             <element id="dir-copy" path="$PROJECT_DIR$/demo/build/resources/main" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="org.vaadin-addon-2.0.4.jar">
+            <element id="archive" name="org.vaadin.addons-addon-2.0.4.jar">
               <element id="module-output" name="addon" />
               <element id="dir-copy" path="$PROJECT_DIR$/addon/build/resources/main" />
             </element>
@@ -61,7 +61,7 @@
         </element>
       </root>
     </artifact>
-    <artifact type="exploded-war" name="Gradle : org.vaadin:demo : CssInject.war (exploded)">
+    <artifact type="exploded-war" name="Gradle : org.vaadin.addons:demo : CssInject.war (exploded)">
       <output-path>$PROJECT_DIR$/build/classes/artifacts/demo/exploded/CssInject.war</output-path>
       <properties id="gradle-properties">
         <options external-project-path="$PROJECT_DIR$/demo" />
@@ -74,7 +74,7 @@
             <element id="dir-copy" path="$PROJECT_DIR$/demo/build/resources/main" />
           </element>
           <element id="directory" name="lib">
-            <element id="archive" name="org.vaadin-addon-2.0.4.jar">
+            <element id="archive" name="org.vaadin.addons-addon-2.0.4.jar">
               <element id="module-output" name="addon" />
               <element id="dir-copy" path="$PROJECT_DIR$/addon/build/resources/main" />
             </element>
@@ -151,6 +151,17 @@
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+  </component>
+  <component name="libraryTable">
+    <library name="Gradle: junit:junit:4.8.2">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.8.2/c94f54227b08100974c36170dcb53329435fe5ad/junit-4.8.2.jar!/" />
+      </CLASSES>
+      <JAVADOC />
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/junit/junit/4.8.2/cccca612a66b8387c399be31d69daf000de2ac9e/junit-4.8.2-sources.jar!/" />
+      </SOURCES>
+    </library>
   </component>
   <component name="masterDetails">
     <states>
