@@ -32,6 +32,7 @@ subprojects {
  * Vaadin addon project
  */
 project(':addon') {
+    apply plugin: "maven"
     apply plugin: "maven-publish"
     war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
 
@@ -48,8 +49,18 @@ project(':addon') {
         }
     }
 
+    task createAddonPom {
+        pom{ artifactId = addonName.toLowerCase() }.writeTo("$buildDir/generated-pom.xml")
+    }
+
     jar {
         dependsOn test
+        dependsOn createAddonPom
+        into("META-INF/maven/${project.group}/${addonName.toLowerCase()}") {
+            from "$buildDir/generated-pom.xml"
+            rename ".*", "pom.xml"
+        }
+        from sourceSets.main.output
         from sourceSets.main.allJava
     }
     task sourceJar(type: Jar) {
