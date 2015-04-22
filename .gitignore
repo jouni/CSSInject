@@ -1,18 +1,18 @@
+# Ignored in root project
+.gradle
 
-.settings
+#Ignored in all projects
+**/.classpath
+**/.project
+**/.settings
+**/META-INF
+**/build
 
-.settings/*
-
-WebContent/VAADIN/widgetsets
-
-WebContent/VAADIN/widgetsets/*
-
-WebContent/WEB-INF/lib/vaadin*.jar
-
-build
-
-build/*
-
-deploy
-
-deply/*
+# Specific ignores
+addon/src/main/webapp/VAADIN/
+demo/src/main/webapp/VAADIN/gwt-unitCache/
+demo/src/main/webapp/VAADIN/themes/demo/styles.css
+demo/src/main/webapp/VAADIN/widgetsets/
+addon/GWT development mode for addon.launch
+/build/
+/bin/

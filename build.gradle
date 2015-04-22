@@ -1,0 +1,196 @@
+def addonVersion = '2.0.4'
+def vaadinVersion = '7.4.3'
+def addonName = 'CssInject'
+def authorNames = 'Jouni Koivuviita'
+
+allprojects {
+    group = 'org.vaadin.addons'
+    version = addonVersion
+    apply plugin: 'eclipse-wtp'
+    apply plugin: 'idea'
+}
+
+subprojects {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    apply plugin: 'java'
+    apply from: 'http://plugins.jasoft.fi/vaadin.plugin'
+    //workaround for vaadin 7.4 and jetty 8
+    configurations.each { conf ->
+        conf.exclude module: 'asm-all'
+    }
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+    vaadin {
+        version vaadinVersion
+    }
+}
+
+/**
+ * Vaadin addon project
+ */
+project(':addon') {
+    apply plugin: "maven"
+    apply plugin: "maven-publish"
+    war.enabled = false //war plugin applied by the Vaadin plugin, not needed here
+
+    dependencies {
+        testCompile group: 'junit', name: 'junit', version: '4.8.+'
+    }
+
+    vaadin {
+        widgetset = "${project.group}.${addonName.toLowerCase()}.${addonName}WidgetSet"
+        addon {
+            author authorNames
+            license 'Apache 2.0'
+            title addonName
+        }
+    }
+
+    task createAddonPom {
+        pom{ artifactId = addonName.toLowerCase() }.writeTo("$buildDir/generated-pom.xml")
+    }
+
+    jar {
+        dependsOn test
+        dependsOn createAddonPom
+        into("META-INF/maven/${project.group}/${addonName.toLowerCase()}") {
+            from "$buildDir/generated-pom.xml"
+            rename ".*", "pom.xml"
+        }
+        from sourceSets.main.output
+        from sourceSets.main.allJava
+    }
+    task sourceJar(type: Jar) {
+        from sourceSets.main.allJava
+    }
+    publishing {
+        repositories {
+            maven {
+                /**
+                 * Configure your repository into ~/.gradle/gradle.properties, for example:
+                 * publishUrl=http://172.21.0.127:8081/nexus/content/repositories/vaadin-addons
+                 * publishUsername=deployment
+                 * publishPassword=deployment
+                 */
+                url publishUrl
+                credentials {
+                    username publishUsername
+                    password publishPassword
+                }
+            }
+        }
+        publications {
+            addon(MavenPublication) {
+                artifactId addonName.toLowerCase()
+                from components.java
+                artifact sourceJar {
+                    classifier "sources"
+                }
+            }
+        }
+    }
+
+}
+
+/*
+ * Demo application for demonstrating the addon
+ */
+project(':demo') {
+    afterEvaluate { project ->
+        if(!project.path.equals(':demo') || !new File(".").absolutePath.endsWith("demo\\."))
+            return
+        def demoUiFolder = "src/main/java/${project.group}/${addonName.toLowerCase()}/demo".replaceAll("\\.", "/")
+        demoUiFolder = new File(demoUiFolder)
+        demoUiFolder.mkdirs()
+        def demoUi = new File(demoUiFolder, "${addonName}Demo.java")
+        if(!demoUi.exists()) {
+            demoUi.withWriter {
+                it << "package ${project.group}.${addonName.toLowerCase()}.demo;\n\n\n\n"
+                it << "public class ${addonName}Demo extends com.vaadin.ui.UI {\n\n"
+                it << "   @Override\n"
+                it << "   protected void init(com.vaadin.server.VaadinRequest request) {\n"
+                it << "      \n"
+                it << "   }\n"
+                it << "\n}"
+            }
+        }
+
+        def webXml = new File("src/main/webapp/WEB-INF/web.xml")
+        def xml = new XmlParser().parse(webXml)
+        xml.'display-name'[0].replaceNode {
+            'display-name'(addonName)
+        }
+        xml.servlet[0].with {
+            if(demoUi.exists())
+                it.'init-param'[0].'param-value'[0].replaceNode{ 'param-value' "${project.group}.${addonName.toLowerCase()}.demo.${addonName}Demo" }
+            it.'init-param'[1].'param-value'[0].replaceNode{ 'param-value' "${project.group}.${addonName.toLowerCase()}.demo.DemoWidgetSet" }
+        }
+        groovy.xml.XmlUtil.serialize(xml, new PrintWriter(new FileWriter(webXml)))
+
+        def demoWidgetSetFolder = "src/main/resources/${project.group}/${addonName.toLowerCase()}/demo".replaceAll("\\.", "/")
+        demoUiFolder = new File(demoWidgetSetFolder)
+        demoUiFolder.mkdirs()
+        def demoWidgetSet = new File(demoWidgetSetFolder, "DemoWidgetSet.gwt.xml")
+        if(!demoWidgetSet.exists()) {
+            demoWidgetSet.createNewFile()
+            demoWidgetSet.withWriter {
+                it << """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Vaadin//DTD Vaadin 7//EN" "https://raw.github.com/vaadin/gwt/master/distro-source/core/src/gwt-module.dtd">
+<!-- WS Compiler: manually edited -->
+<module>
+        <inherits name="com.vaadin.DefaultWidgetSet" />
+        <inherits name="${project.group}.${addonName.toLowerCase()}.${addonName}WidgetSet" />
+        <set-configuration-property name="devModeRedirectEnabled" value="true" />
+        <set-property name="user.agent" value="ie8,ie9,gecko1_8,safari,ie10" />
+        <source path="client" />
+        <source path="shared" />
+        <collapse-all-properties />
+        <set-property name="compiler.useSymbolMaps" value="true" />
+</module>
+"""
+            }
+        }
+
+    }
+    dependencies {
+        compile project(':addon')
+
+    }
+    apply plugin: "war"
+    vaadin {
+        widgetset = "${project.group}.${addonName.toLowerCase()}.demo.DemoWidgetSet"
+        serverPort 7676
+        debug true
+        devmode {
+            noserver true
+            superDevMode true
+            bindAddress '0.0.0.0'
+            codeServerPort 9997
+        }
+        testbench {
+            enabled true
+        }
+        plugin {
+            logToConsole true
+        }
+    }
+
+    war {
+        archiveName = "${addonName}.war"
+        // Include widgetset
+        dependsOn test, vaadinCompileWidgetset
+        // Add sources
+        webInf {
+            into('classes') {
+                from sourceSets.main.allJava
+            }
+        }
+    }
+    test {
+        dependsOn vaadinCompileWidgetset
+        systemProperties = System.properties
+    }
+}
