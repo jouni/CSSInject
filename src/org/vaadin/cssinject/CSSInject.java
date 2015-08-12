@@ -71,7 +71,7 @@ public class CSSInject extends AbstractExtension {
      * @param styleSheet
      */
     public void removeStyleSheet(Resource styleSheet) {
-        if (styleSheets == null) {
+        if (styleSheets != null) {
             styleSheets.remove(styleSheet);
 
             // TODO how to clear the resource from the state?
