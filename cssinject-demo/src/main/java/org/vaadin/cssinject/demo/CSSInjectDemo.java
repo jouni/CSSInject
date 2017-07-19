@@ -29,6 +29,8 @@ public class CSSInjectDemo extends UI {
     public static class Servlet extends VaadinServlet {
     }
 
+    private static final int POLL_INTERVAL = 500;
+
     private Thread t;
     private float sequence = 0;
     private boolean isRunning = true;
@@ -53,65 +55,45 @@ public class CSSInjectDemo extends UI {
         colorMeDynamically.setSizeUndefined();
 
         // Change the label color with an interval. Get the updates via polling
-//        UI.getCurrent().setPollInterval(500);
+        UI.getCurrent().setPollInterval(POLL_INTERVAL);
 
-         layout.setExpandRatio(colorMeDynamically, 1);
-         layout.setComponentAlignment(colorMeDynamically,
-         Alignment.MIDDLE_CENTER);
+        layout.setExpandRatio(colorMeDynamically, 1);
+        layout.setComponentAlignment(colorMeDynamically,
+                Alignment.MIDDLE_CENTER);
 
         // Do the actual color operation and set the CSS value
         t = new Thread() {
-         @Override
-         public void run() {
-             try {
-                 while (isRunning) {
-                     Thread.sleep(500);
+            @Override
+            public void run() {
+                try {
+                    while (isRunning) {
+                        Thread.sleep(POLL_INTERVAL);
 
-                     synchronized (layout) {
-                         sequence += 2;
-                         Color c = Color.getHSBColor(sequence / 100, 0.8f,
-                                 0.7f);
-                         css.setStyles(".v-app.cssinjectdemo {"
-                                 + " background-color: rgb("
-                                 + c.getRed() + ","
-                                 + c.getGreen() + ","
-                                 + c.getBlue() + ");}"
-                                 + ".v-app.cssinjectdemo .v-label {"
-                                 + " color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.4); }");
-                     }
-                 }
-             } catch (InterruptedException e) {
-                 e.printStackTrace();
-             }
-             }
+                        synchronized (layout) {
+                            sequence += 2;
+                            Color c = Color.getHSBColor(sequence / 100, 0.8f,
+                                    0.7f);
+                            css.setStyles(".v-app.cssinjectdemo {"
+                                    + " background-color: rgb("
+                                    + c.getRed() + ","
+                                    + c.getGreen() + ","
+                                    + c.getBlue() + ");}"
+                                    + ".v-app.cssinjectdemo .v-label {"
+                                    + " color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.4); }");
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         };
         t.start();
 
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
 
-        Button toggle = new Button("Remove CSSInject",
-                new Button.ClickListener() {
-                    public void buttonClick(ClickEvent event) {
-                        if (css.getParent() != null) {
-                            css.remove();
-                            event.getButton().setCaption("Add CSSInject");
-                            UI.getCurrent().setPollInterval(-1);
-                        } else {
-                            String styles = css.getStyles();
-                            css = new CSSInject(getUI());
-                            css.setStyles(styles);
-                            event.getButton().setCaption("Remove CSSInject");
-                            UI.getCurrent().setPollInterval(500);
-                        }
-                    }
-                });
-        toggle.setWidth("200px");
-        buttons.addComponent(toggle);
-        layout.addComponent(buttons);
-        layout.setComponentAlignment(buttons, Alignment.TOP_CENTER);
-
-        final ThemeResource themeStyles = new ThemeResource("../demo/extra.css");
+        final ThemeResource themeStyles = new ThemeResource(
+                "../demo/extra.css");
         Button toggleThemeStyleSheet = new Button("Add themes/demo/extra.css",
                 new Button.ClickListener() {
                     public void buttonClick(ClickEvent event) {
@@ -126,9 +108,35 @@ public class CSSInjectDemo extends UI {
                         }
                     }
                 });
-        toggleThemeStyleSheet.setWidth("200px");
-        buttons.addComponent(toggleThemeStyleSheet);
+        toggleThemeStyleSheet.setWidth("300px");
 
+        Button toggle = new Button("Remove CSSInject",
+                new Button.ClickListener() {
+                    public void buttonClick(ClickEvent event) {
+                        if (css.getParent() != null) {
+                            css.remove();
+                            event.getButton().setCaption("Add CSSInject");
+                            UI.getCurrent().setPollInterval(-1);
+
+                            toggleThemeStyleSheet.setEnabled(false);
+                            toggleThemeStyleSheet
+                                    .setCaption("Add themes/demo/extra.css");
+                        } else {
+                            String styles = css.getStyles();
+                            css = new CSSInject(getUI());
+                            css.setStyles(styles);
+                            event.getButton().setCaption("Remove CSSInject");
+                            UI.getCurrent().setPollInterval(POLL_INTERVAL);
+
+                            toggleThemeStyleSheet.setEnabled(true);
+                        }
+                    }
+                });
+        toggle.setWidth("300px");
+
+        buttons.addComponents(toggle, toggleThemeStyleSheet);
+
+        layout.addComponent(buttons);
+        layout.setComponentAlignment(buttons, Alignment.TOP_CENTER);
     }
-
 }

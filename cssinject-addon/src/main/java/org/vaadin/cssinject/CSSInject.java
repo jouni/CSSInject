@@ -1,6 +1,7 @@
 package org.vaadin.cssinject;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.vaadin.cssinject.client.CSSInjectState;
 
@@ -13,7 +14,8 @@ public class CSSInject extends AbstractExtension {
 
     private static final long serialVersionUID = 9172956539550353998L;
 
-    private ArrayList<Resource> styleSheets;
+    private Map<String, Resource> styleSheets = new HashMap<>();
+    private int nextId = 0;
 
     public CSSInject(UI target) {
         extend(target);
@@ -31,7 +33,7 @@ public class CSSInject extends AbstractExtension {
     /**
      * Set the CSS string for this CSSInject. This will be added to the UI this
      * CSSInject is extending as a STYLE element in the HEAD of the document.
-     * 
+     *
      * @param text
      */
     public void setStyles(String text) {
@@ -40,7 +42,7 @@ public class CSSInject extends AbstractExtension {
 
     /**
      * Get the CSS string currently set to this CSSInject.
-     * 
+     *
      * @return
      */
     public String getStyles() {
@@ -51,31 +53,55 @@ public class CSSInject extends AbstractExtension {
      * Attach a separate CSS stylesheet to the Window where this CSSInject
      * instance is attached to. The stylesheet will be added to the document's
      * HEAD element as a LINK element with the given resource as the href.
-     * 
+     *
      * @param stylesheet
      * @return the same Resource which was passed as the argument
      */
     public Resource addStyleSheet(Resource stylesheet) {
-        if (styleSheets == null) {
-            styleSheets = new ArrayList<Resource>();
+        if (stylesheet == null) {
+            throw new IllegalArgumentException("Stylesheet cannot be null");
         }
-        styleSheets.add(stylesheet);
-        setResource("ss" + ++getState().styleSheetId, stylesheet);
+
+        // Generate next id
+        String id = "ss" + nextId++;
+
+        // Set stylesheet as resource
+        setResource(id, stylesheet);
+
+        // Store resource with id locally
+        styleSheets.put(id, stylesheet);
+
+        // Add id to list of IDs
+        getState().styleSheetIds.add(id);
 
         return stylesheet;
     }
 
     /**
-     * Remove the given stylesheet resource. TODO doesn't work currently
-     * 
+     * Remove the given stylesheet resource.
+     *
      * @param styleSheet
      */
     public void removeStyleSheet(Resource styleSheet) {
-        if (styleSheets != null) {
-            styleSheets.remove(styleSheet);
-
-            // TODO how to clear the resource from the state?
+        if (styleSheet == null) {
+            throw new IllegalArgumentException("Stylesheet cannot be null");
         }
+
+        // Remove given resource from local storage
+        styleSheets.entrySet().removeIf(entry -> {
+            if (styleSheet.equals(entry.getValue())) {
+
+                // Remove stylesheet from resources
+                setResource(entry.getKey(), null);
+
+                // Remove from list of IDs
+                getState().styleSheetIds.remove(entry.getKey());
+
+                // Indicate that entry should be removed from the map
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
@@ -83,34 +109,22 @@ public class CSSInject extends AbstractExtension {
      * relative to the theme you use, e.g. if your theme folder is in
      * <code>VAADIN/themes/mytheme</code>, then the stylesheet url will be
      * <code>VAADIN/themes/mytheme/stylesheetUrl</code>.
-     * 
+     *
      * @param styleSheetUrl
      */
     public Resource addThemeStyleSheet(String styleSheetUrl) {
         return this.addStyleSheet(new ThemeResource(styleSheetUrl));
     }
 
-    /**
-     * TODO doesn't work currently
-     */
     public void removeThemeStyleSheet(String styleSheetUrl) {
-        if (styleSheets != null) {
-            for (Resource stylesheet : styleSheets) {
-                if (stylesheet instanceof ThemeResource) {
-                    ThemeResource r = (ThemeResource) stylesheet;
-                    if (r.getResourceId().equals(styleSheetUrl)) {
-                        removeStyleSheet(r);
-                        break;
-                    }
-                }
-            }
-        }
+        styleSheets.values().stream()
+                .filter(resource -> (resource instanceof ThemeResource
+                        && ((ThemeResource) resource).getResourceId()
+                        .equals(styleSheetUrl))).findAny()
+                .ifPresent(this::removeStyleSheet);
     }
 
     public boolean hasStyleSheet(Resource stylesheet) {
-        if (styleSheets == null)
-            return false;
-        return styleSheets.contains(stylesheet);
+        return styleSheets.containsValue(stylesheet);
     }
-
 }
