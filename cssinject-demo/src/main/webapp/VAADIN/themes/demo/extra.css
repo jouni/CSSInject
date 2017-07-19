@@ -1,0 +1,5 @@
+.v-label:after {
+    content: "Hi! I'm added from a separate theme stylesheet.";
+    display: block;
+    text-align: center;
+}

@@ -6,12 +6,18 @@ import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.LinkElement;
 import com.google.gwt.dom.client.NodeList;
+import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.client.extensions.AbstractExtensionConnector;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(CSSInject.class)
 public class CSSInjectConnector extends AbstractExtensionConnector {
+
+    @Override
+    protected void extend(ServerConnector serverConnector) {
+
+    }
 
     @Override
     public void onStateChanged(StateChangeEvent event) {
