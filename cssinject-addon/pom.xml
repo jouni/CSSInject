@@ -6,7 +6,7 @@
 	<artifactId>cssinject</artifactId>
 	<packaging>jar</packaging>
 	<version>3.0.0-SNAPSHOT</version>
-	<name>MyComponent Add-on</name>
+	<name>CSSInject</name>
 
 	<prerequisites>
 		<maven>3</maven>
@@ -16,8 +16,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<vaadin.version>8.1.0.beta3</vaadin.version>
-		<vaadin.plugin.version>8.1.0.beta3</vaadin.plugin.version>
+		<vaadin.version>8.1.0.rc1</vaadin.version>
+		<vaadin.plugin.version>8.1.0.rc1</vaadin.plugin.version>
 
 		<!-- ZIP Manifest fields -->
 		<Implementation-Version>${project.version}</Implementation-Version>
@@ -28,24 +28,21 @@
 		<Vaadin-Addon>${project.artifactId}-${project.version}.jar</Vaadin-Addon>
 	</properties>
 
-    <!--
 	<organization>
-		<name>My Name</name>
-		<url>https://github.com/mygithubaccount/MyComponent/</url>
+		<name>Jouni Koivuviita</name>
+		<url>https://github.com/jouni/CSSInject</url>
 	</organization>
 
 	<scm>
-		<url>git://github.com/mygithubaccount/MyComponent.git</url>
-		<connection>scm:git:git://github.com/mygithubaccount/MyComponent.git</connection>
-		<developerConnection>scm:git:ssh://git@github.com:/mygithubaccount/${componentClassName}.git</developerConnection>
-		<tag>MyComponent add-on for Vaadin</tag>
+		<url>git://github.com/jouni/CSSInject.git</url>
+		<connection>scm:git:git://github.com/jouni/CSSInject.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com:/jouni/CSSInject.git</developerConnection>
 	</scm>
 
 	<issueManagement>
 		<system>GitHub</system>
-		<url>https://github.com/mygithubaccount/MyComponent/issues</url>
+		<url>https://github.com/jouni/CSSInject/issues</url>
 	</issueManagement>
-    -->
 
 	<licenses>
 		<license>
