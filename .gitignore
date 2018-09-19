@@ -16,3 +16,8 @@ build/*
 deploy
 
 deply/*
+
+.idea/
+*.iml
+cssinject-addon/target/
+cssinject-demo/target/
